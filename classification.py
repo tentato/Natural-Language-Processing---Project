@@ -1,6 +1,8 @@
 import json
 import numpy as np
+from sklearn import metrics
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import GradientBoostingClassifier
@@ -13,9 +15,28 @@ with open('result.json', 'r') as openfile:
     json_object = json.load(openfile)
 
 labels = json_object['label']
-subjects = json_object['subject']
+# subjects = json_object['subject']
+# subjects_joined = [" ".join(s) for s in subjects]
 contents = json_object['content']
+contents_joined = [" ".join(s) for s in contents]
 
-print(labels[0])
-print(subjects[0])
-print(contents[0])
+# print(labels[0])
+# print(subjects_joined[0])
+# print(contents_joined[0])
+
+X_train, X_test, y_train, y_test = train_test_split(contents_joined, labels, test_size=0.33, random_state=10)
+
+# TF - IDF
+tf_idf = TfidfVectorizer()
+X_train_tf = tf_idf.fit_transform(X_train)
+print(X_train_tf[0].shape)
+X_train_tf = tf_idf.transform(X_train)
+
+X_test_tf = tf_idf.transform(X_test)
+print(X_test_tf[0].shape)
+
+clsf = RandomForestClassifier().fit(X_train_tf, y_train)
+
+y_pred = clsf.predict(X_test_tf)
+
+print(metrics.classification_report(y_test, y_pred, target_names=['Positive', 'Negative']))

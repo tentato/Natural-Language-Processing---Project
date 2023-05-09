@@ -24,13 +24,14 @@ dataset = pd.read_csv(input_path)
 texts = dataset['text']
 y = dataset['label_num']
 
-subjects, contents = [text.split("\n")[0] for text in texts], [text.replace(text.split("\n")[0], "") for text in texts]
+# subjects, contents = [text.split("\n")[0] for text in texts], [text.replace(text.split("\n")[0], "") for text in texts]
 
-tokens_subjects, tokens_contents = [preprocessing(text) for text in subjects], [preprocessing(text) for text in contents]
+tokens_contents = [preprocessing(text) for text in texts]
+# tokens_subjects, tokens_contents = [preprocessing(text) for text in subjects], [preprocessing(text) for text in contents]
 
 dictionary = {
     "label": y.to_list(),
-    "subject": tokens_subjects,
+    # "subject": tokens_subjects,
     "content": tokens_contents
 }
 
