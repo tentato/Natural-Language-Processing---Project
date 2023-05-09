@@ -1,12 +1,6 @@
 import pandas as pd
-import numpy as np
 import re
 import json
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.ensemble import GradientBoostingClassifier
-from nltk.corpus import stopwords
 
 def preprocessing(text):
     list_of_words = re.split(r"\s+", text)
