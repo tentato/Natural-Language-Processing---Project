@@ -19,6 +19,8 @@ def preprocessing(text):
     return clear_words
 
 input_path = 'dataset/spam_ham_dataset.csv'
+result_name = "result.json"
+
 
 dataset = pd.read_csv(input_path)
 texts = dataset['text']
@@ -31,13 +33,11 @@ tokens_subjects, tokens_contents = [preprocessing(text) for text in subjects], [
 print(tokens_subjects[0])
 print(tokens_contents[0])
 
-# result_name = "result.json"
-# dictionary = {
-#     "ilosc_zdan": sentences_count,
-#     "lista_oczyszczonych_zdan": clear_sentences,
-#     "ilosc_slow": word_count,
-#     "lista_oczyszczonych_slow": clear_words
-# }
+dictionary = {
+    "label": y,
+    "subject": tokens_subjects,
+    "content": tokens_contents
+}
 
 # json_object = json.dumps(dictionary, indent=4)
  
