@@ -2,6 +2,9 @@ import pandas as pd
 import re
 import json
 
+# 0 - ham
+# 1 - spam
+
 def preprocessing(text):
     list_of_words = re.split(r"\s+", text)
     clear_words = []
