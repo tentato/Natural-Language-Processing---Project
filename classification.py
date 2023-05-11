@@ -14,11 +14,12 @@ from nltk.corpus import stopwords
 
 clfs = {
     "RFC": RandomForestClassifier(),
-    "ABC": AdaBoostClassifier(),
-    "GBC": GradientBoostingClassifier()
+    # "ABC": AdaBoostClassifier(),
+    # "GBC": GradientBoostingClassifier()
 }
 
 for input in os.listdir("input"):
+    print(input)
     with open(f"input/{input}", 'r') as openfile:
         json_object = json.load(openfile)
 
