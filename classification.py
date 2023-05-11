@@ -19,9 +19,7 @@ clfs = {
 }
 
 for input in os.listdir("input"):
-    print(input)
-    exit()
-    with open('result.json', 'r') as openfile:
+    with open(f"input/{input}", 'r') as openfile:
         json_object = json.load(openfile)
 
     labels = json_object['label']
@@ -38,6 +36,7 @@ for input in os.listdir("input"):
 
 
     for clf in clfs:
-        clf = clf.fit(X_train_tf, y_train)
+        print(clf)
+        clf = clfs[clf].fit(X_train_tf, y_train)
         y_pred = clf.predict(X_test_tf)
         print(metrics.classification_report(y_test, y_pred, target_names=['Positive', 'Negative']))
