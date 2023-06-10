@@ -15,12 +15,12 @@ import matplotlib.pyplot as plt
 # 0 - ham
 # 1 - spam
 
-clf = RandomForestClassifier()
-max_features ={
-    100: 100,
-    500: 500,
-    2000: 2000
+clfs = {
+    "RFC": RandomForestClassifier(),
+    "ABC": AdaBoostClassifier(),
+    "GBC": GradientBoostingClassifier()
 }
+
 # metrics = {
 #     "recall": recall_score,
 #     'precision': precision_score,
@@ -32,7 +32,7 @@ max_features ={
 # n_repeats = 2
 # rskf = RepeatedStratifiedKFold(n_splits=n_splits, n_repeats=n_repeats, random_state=1234)
 # scores = []
-# scores = np.zeros((len(max_features), n_datasets, n_splits * n_repeats, len(metrics)))
+# scores = np.zeros((len(clfs), n_datasets, n_splits * n_repeats, len(metrics)))
 
 # for dataset_id, input in enumerate(os.listdir("input")):
 #     print(input)
@@ -48,33 +48,33 @@ max_features ={
 
 #     # X_train, X_test, y_train, y_test = train_test_split(contents_joined, labels, test_size=0.33, random_state=10)
 
-#         for f_id, f in enumerate(max_features):
+#         tf_idf = TfidfVectorizer()
+#         X_train_tf = tf_idf.fit_transform(X[train])
+#         X_test_tf = tf_idf.transform(X[test])
 
-#             tf_idf = TfidfVectorizer(max_features=f)
-#             X_train_tf = tf_idf.fit_transform(X[train])
-#             X_test_tf = tf_idf.transform(X[test])
-#             print(f)
-#             clf.fit(X_train_tf, y[train])
+#         for clf_id, clf in enumerate(clfs):
+#             print(clf)
+#             clf = clfs[clf].fit(X_train_tf, y[train])
 #             y_pred = clf.predict(X_test_tf)
 
 
 #             for metric_id, metric in enumerate(metrics):
-#                 scores[f_id, dataset_id, fold_id, metric_id] = metrics[metric](
+#                 scores[clf_id, dataset_id, fold_id, metric_id] = metrics[metric](
 #                     y[test], y_pred) 
 #             # print(classification_report(y[test], y_pred, target_names=['Positive', 'Negative']))
 
-# np.save('results1', scores)
+# np.save('results2', scores)
 
 # //////////////////////////////////////////////////////////////////////////
 
-scores = np.load('results1.npy')
+scores = np.load('results2.npy')
 print("\nScores:\n", scores.shape)
 
 
 scores = np.mean(scores, axis=2).T
 scores = np.mean(scores, axis=1)
 metrics=["Recall", 'Precision', 'F1']
-methods=["100", '500', '2000']
+methods=["RFC", 'ABC', 'GBC']
 
 
 N = scores.shape[0]
@@ -100,23 +100,22 @@ plt.yticks([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1],
 color="grey", size=7)
 plt.ylim(0,1)
 
-
+print(methods)
 for method_id, method in enumerate(methods):
     values=scores[:, method_id].tolist()
+    print(values)
     values += values[:1]
     print(values)
     ax.plot(angles, values, linewidth=1, linestyle='solid', label=method)
 
 # Dodajemy legende
-plt.legend(bbox_to_anchor=(1.15, -0.05), ncol=5)
+plt.legend(bbox_to_anchor=(1, -0.05), ncol=5)
 # Zapisujemy wykres
-plt.savefig("radar1", dpi=200)
+plt.savefig("radar2", dpi=200)
 
 
-
-scores = np.load('results1.npy')
+scores = np.load('results2.npy')
 scores = np.mean(scores, axis=2).T
-clfs = max_features
 
 for i in range(scores.shape[0]):
     print("\nMean scores:\n", scores)
