@@ -15,12 +15,12 @@ import matplotlib.pyplot as plt
 # 0 - ham
 # 1 - spam
 
-clfs = {
-    "RFC": RandomForestClassifier(),
-    "ABC": AdaBoostClassifier(),
-    "GBC": GradientBoostingClassifier()
+clf = RandomForestClassifier()
+max_features ={
+    "100": 100,
+    "500": 500,
+    "2000": 2000
 }
-
 metrics = {
     "recall": recall_score,
     'precision': precision_score,
@@ -32,7 +32,7 @@ n_splits = 5
 n_repeats = 2
 rskf = RepeatedStratifiedKFold(n_splits=n_splits, n_repeats=n_repeats, random_state=1234)
 scores = []
-scores = np.zeros((len(clfs), n_datasets, n_splits * n_repeats, len(metrics)))
+scores = np.zeros((len(max_features), n_datasets, n_splits * n_repeats, len(metrics)))
 
 for dataset_id, input in enumerate(os.listdir("input")):
     print(input)
@@ -48,18 +48,18 @@ for dataset_id, input in enumerate(os.listdir("input")):
 
     # X_train, X_test, y_train, y_test = train_test_split(contents_joined, labels, test_size=0.33, random_state=10)
 
-        tf_idf = TfidfVectorizer()
-        X_train_tf = tf_idf.fit_transform(X[train])
-        X_test_tf = tf_idf.transform(X[test])
+        for f_id, f in enumerate(max_features):
 
-        for clf_id, clf in enumerate(clfs):
-            print(clf)
-            clf = clfs[clf].fit(X_train_tf, y[train])
+            tf_idf = TfidfVectorizer(max_features=f)
+            X_train_tf = tf_idf.fit_transform(X[train])
+            X_test_tf = tf_idf.transform(X[test])
+            print(f)
+            clf.fit(X_train_tf, y[train])
             y_pred = clf.predict(X_test_tf)
 
 
             for metric_id, metric in enumerate(metrics):
-                scores[clf_id, dataset_id, fold_id, metric_id] = metrics[metric](
+                scores[f_id, dataset_id, fold_id, metric_id] = metrics[metric](
                     y[test], y_pred) 
             # print(classification_report(y[test], y_pred, target_names=['Positive', 'Negative']))
 
