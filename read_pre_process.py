@@ -17,8 +17,14 @@ def preprocessing(text):
     clear_words = list(filter(None, clear_words))
     return clear_words
 
+def preprocessing_words(text):
+    list_of_words = re.split(r"\s+", text)
+    return list_of_words
+
 dataset_path = 'dataset/'
-input_path = 'input/'
+# input_path = 'input/'
+input_path = 'input_no_preprocessing/'
+os.makedirs(input_path)
 
 for set in os.listdir(dataset_path):
     print(set)
@@ -27,7 +33,7 @@ for set in os.listdir(dataset_path):
     texts = dataset['text']
     y = dataset['label_num']
 
-    tokens_contents = [preprocessing(text) for text in texts]
+    tokens_contents = [preprocessing_words(text) for text in texts]
 
     dictionary = {
         "label": y.to_list(),
